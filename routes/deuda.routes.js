@@ -3,14 +3,17 @@ const { Deuda } = require("../models");
 const router = express.Router();
 
 // obtener las deudas dependientes de pago de un cliente
-router.get("/:ci", async (req, res) => {
-  const { ci } = req.params;
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
 
   try {
     const deudas = await Deuda.findAll({
-      attributes: ["idDeuda", "saldo"],
+      attributes: [
+        ["idDeuda", "deudaId"],
+        ["saldo", "monto"],
+      ],
       where: {
-        idCliente: ci,
+        clienteId: id,
         pagada: false,
       },
     });

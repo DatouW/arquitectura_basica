@@ -30,6 +30,7 @@ async function triggers() {
             EXECUTE FUNCTION update_saldo();
         
         END IF;
+        
       END $$;     
 `
     );
@@ -56,6 +57,7 @@ async function triggers() {
           SET saldo = saldo_anterior - NEW.monto 
           WHERE "idDeuda" = NEW."deudaId"; 
       END IF;
+      RETURN NEW;
     END;
     $$ LANGUAGE plpgsql;
    

@@ -17,7 +17,7 @@ app.use("/api/pagos", require("./routes/pago.routes"));
   try {
     //     await sequelize.authenticate();
     //     console.log("Connection has been established successfully.");
-    await sequelize.sync({ force: false });
+    await sequelize.sync();
     await triggers();
     console.log("Modelos sincronizados con la base de datos.");
 
