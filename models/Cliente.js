@@ -4,9 +4,10 @@ const sequelize = require("../database/index");
 const Cliente = sequelize.define(
   "cliente",
   {
-    ci: {
-      type: DataTypes.INTEGER,
+    idCliente: {
+      type: DataTypes.UUID,
       primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
     },
     nombre: {
       type: DataTypes.STRING,
@@ -14,7 +15,6 @@ const Cliente = sequelize.define(
     },
   },
   {
-    // tableName: "cliente",
     timestamps: false,
   }
 );

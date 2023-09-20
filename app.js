@@ -1,13 +1,7 @@
 const express = require("express");
 const sequelize = require("./database/index");
+const triggers = require("./database/triggers");
 require("./models/index");
-const {
-  poblarTablaCliente,
-  poblarTablaDeuda,
-  destroyTables,
-} = require("./datos");
-
-const { InsertarClientes, InsertarDeudas } = require("./proceso");
 
 const app = express();
 
@@ -23,12 +17,9 @@ app.use("/api/pagos", require("./routes/pago.routes"));
   try {
     //     await sequelize.authenticate();
     //     console.log("Connection has been established successfully.");
-    await sequelize.sync();
-
+    await sequelize.sync({ force: false });
+    await triggers();
     console.log("Modelos sincronizados con la base de datos.");
-    await destroyTables();
-    await InsertarClientes(30);
-    await InsertarDeudas(50);
 
     app.listen(3000, () => {
       console.log("Running on port 3000");

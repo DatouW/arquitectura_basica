@@ -1,35 +1,20 @@
 const express = require("express");
-const { Pago, Deuda } = require("../models");
+const { Pago } = require("../models");
 const router = express.Router();
 
 // Routes
 router.post("/", async (req, res) => {
-  const { deudas, monto } = req.body;
-  try {
-    await sequelize.transaction(async (t) => {
-      const pago = await Pago.create(
-        {
-          monto,
-        },
-        { transaction: t }
-      );
+  const { deudas } = req.body;
 
-      // Paso 2: Actualiza múltiples registros de deuda
-      for (let i = 0; i < deudas.length; i++) {
-        await Deuda.update(
-          { pagoId: pago.id },
-          {
-            where: {
-              idDeuda: deudas[i],
-              pagoId: null,
-            },
-            transaction: t,
-          }
-        );
-      }
-    });
-    res.status(200).json(deudas);
+  try {
+    if (deudas) {
+      await Pago.bulkCreate(deudas);
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(400);
+    }
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       message: error.message,
     });

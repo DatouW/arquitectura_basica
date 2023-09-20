@@ -1,11 +1,11 @@
 const { Cliente, Deuda } = require("./models");
 
 // Función para generar un número de CI aleatorio
-function generarCINuevo() {
-  // Generar un número de CI aleatorio de 7 dígitos
-  const ciAleatorio = Math.floor(1000000 + Math.random() * 9000000);
-  return ciAleatorio;
-}
+// function generarCINuevo() {
+//   // Generar un número de CI aleatorio de 7 dígitos
+//   const ciAleatorio = Math.floor(1000000 + Math.random() * 9000000);
+//   return ciAleatorio;
+// }
 
 function generarNumeroAleatorio(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -15,11 +15,10 @@ function generarNumeroAleatorio(min, max) {
 async function poblarTablaCliente(n) {
   try {
     for (let i = 0; i < n; i++) {
-      const ci = generarCINuevo();
+      // const ci = generarCINuevo();
       const nombre = `Cliente ${i + 1}`;
-
       // Crear un nuevo registro de cliente
-      await Cliente.create({ ci, nombre });
+      await Cliente.create({ nombre });
     }
 
     console.log(`Se poblaron ${n} registros únicos en la tabla Cliente.`);
@@ -31,14 +30,14 @@ async function poblarTablaCliente(n) {
 async function poblarTablaDeuda(n) {
   try {
     const clientes = await Cliente.findAll({
-      attributes: ["ci"],
+      attributes: ["idCliente"],
     });
     for (let i = 0; i < n; i++) {
-      const ciAleatoria =
-        clientes[generarNumeroAleatorio(0, clientes.length - 1)].ci;
+      const { idCliente } =
+        clientes[generarNumeroAleatorio(0, clientes.length - 1)];
       const monto = generarNumeroAleatorio(1, 5000);
       // Crear un nuevo registro de cliente
-      await Deuda.create({ clienteCi: ciAleatoria, monto });
+      await Deuda.create({ clienteId: idCliente, monto });
     }
     console.log(`Se poblaron ${n} registros únicos en la tabla Deuda.`);
   } catch (error) {
@@ -58,8 +57,13 @@ async function destroyTables() {
     console.error("Error al poblar la tabla Deuda:", error.message);
   }
 }
-module.exports = {
-  poblarTablaCliente,
-  poblarTablaDeuda,
-  destroyTables,
-};
+
+(async () => {
+  try {
+    await destroyTables();
+    await poblarTablaCliente(1000);
+    await poblarTablaDeuda(1200);
+  } catch (error) {
+    console.log(error.message);
+  }
+})();

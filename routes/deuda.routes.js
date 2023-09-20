@@ -2,15 +2,16 @@ const express = require("express");
 const { Deuda } = require("../models");
 const router = express.Router();
 
-// obtener las deudas no pagadas de un cliente
+// obtener las deudas dependientes de pago de un cliente
 router.get("/:ci", async (req, res) => {
   const { ci } = req.params;
 
   try {
     const deudas = await Deuda.findAll({
+      attributes: ["idDeuda", "saldo"],
       where: {
-        clienteCi: ci,
-        pagoId: null,
+        idCliente: ci,
+        pagada: false,
       },
     });
     res.status(200).json(deudas);

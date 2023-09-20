@@ -3,11 +3,11 @@ const Deuda = require("./Deuda");
 const Pago = require("./Pago");
 
 // Definir relaciones
-Cliente.hasMany(Deuda, { foreignKey: "clienteCi", sourceKey: "ci" });
-Deuda.belongsTo(Cliente, { foreignKey: "clienteCi", targetKey: "ci" });
+Cliente.hasMany(Deuda, { foreignKey: "clienteId", sourceKey: "idCliente" });
+Deuda.belongsTo(Cliente, { foreignKey: "clienteId", targetKey: "idCliente" });
 
-Pago.hasMany(Deuda, { foreignKey: "pagoId", targetKey: "idPago" });
-Deuda.belongsTo(Pago, { foreignKey: "pagoId", sourceKey: "idPago" });
+Deuda.hasMany(Pago, { foreignKey: "deudaId", sourceKey: "idDeuda" });
+Pago.belongsTo(Deuda, { foreignKey: "deudaId", targetKey: "idDeuda" });
 
 module.exports = {
   Cliente,

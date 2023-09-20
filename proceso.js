@@ -27,8 +27,3 @@ async function InsertarDeudas(n) {
     console.error("Error al llamar al procedimiento almacenado:", error);
   }
 }
-
-module.exports = {
-  InsertarDeudas,
-  InsertarClientes,
-};

@@ -17,9 +17,18 @@ const Deuda = sequelize.define(
         min: 0,
       },
     },
+    saldo: {
+      type: DataTypes.DECIMAL(10, 2),
+      validate: {
+        min: 0,
+      },
+    },
+    pagada: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
-    // tableName: "deuda",
     timestamps: false,
   }
 );
