@@ -1,5 +1,0 @@
-.gitignore
-node_modules
-.env
-proceso.js
-hilos/node_modules
