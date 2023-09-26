@@ -61,8 +61,8 @@ async function destroyTables() {
 (async () => {
   try {
     await destroyTables();
-    await poblarTablaCliente(1000);
-    await poblarTablaDeuda(1200);
+    await poblarTablaCliente(50);
+    await poblarTablaDeuda(150);
   } catch (error) {
     console.log(error.message);
   }

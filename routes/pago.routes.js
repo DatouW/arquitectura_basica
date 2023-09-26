@@ -9,7 +9,7 @@ router.post("/", async (req, res) => {
   try {
     if (deudas) {
       await Pago.bulkCreate(deudas);
-      res.sendStatus(200);
+      res.status(200).json("pago con exito");
     } else {
       res.sendStatus(400);
     }
