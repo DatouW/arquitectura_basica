@@ -20,7 +20,7 @@ router.get("/:id", async (req, res) => {
     res.status(200).json(deudas);
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      error,
     });
   }
 });

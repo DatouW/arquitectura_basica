@@ -5,9 +5,8 @@ const Pago = sequelize.define(
   "pago",
   {
     idPago: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       primaryKey: true,
-      autoIncrement: true,
     },
     monto: {
       type: DataTypes.DECIMAL(10, 2),

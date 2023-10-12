@@ -37,26 +37,33 @@ async function triggers() {
 
     await sequelize.query(
       `
-    CREATE OR REPLACE FUNCTION update_estado()
+    CREATE OR REPLACE FUNCTION verificar_pago()
     RETURNS TRIGGER AS $$
     DECLARE 
+        estado BOOLEAN;
         saldo_anterior DECIMAL(10, 2);
     BEGIN
       -- Obtener el saldo de la tabla deuda
-      SELECT saldo INTO saldo_anterior
+      SELECT pagada,saldo INTO estado,saldo_anterior
       FROM deudas
       WHERE "idDeuda" = NEW."deudaId"; 
-      
-      -- Actualizar el estado de pagado
-      IF NEW.monto = saldo_anterior THEN
-          UPDATE deudas
-          SET pagada = true, saldo = 0
-          WHERE "idDeuda" = NEW."deudaId"; 
-      ELSE
-          UPDATE deudas
-          SET saldo = saldo_anterior - NEW.monto 
-          WHERE "idDeuda" = NEW."deudaId"; 
+
+      IF estado = TRUE THEN
+        RAISE EXCEPTION 'Deuda % ya ha sido pagada', NEW."deudaId";
       END IF;
+
+      IF NEW.monto = saldo_anterior THEN
+        UPDATE deudas
+        SET pagada = true, saldo = 0
+        WHERE "idDeuda" = NEW."deudaId";
+      ELSIF NEW.monto < saldo_anterior THEN
+        UPDATE deudas
+        SET saldo = saldo_anterior - NEW.monto 
+        WHERE "idDeuda" = NEW."deudaId";
+      ELSE
+        RAISE EXCEPTION 'Monto incorrecto';
+    END IF;
+      
       RETURN NEW;
     END;
     $$ LANGUAGE plpgsql;
@@ -67,17 +74,17 @@ async function triggers() {
           SELECT 1 
           FROM information_schema.triggers 
           WHERE event_object_table = 'pagos'
-            AND trigger_name = 'actualizar_estado_saldo'
+            AND trigger_name = 'before_insert_pagos'
         ) THEN
           
-        CREATE TRIGGER actualizar_estado_saldo
-        AFTER INSERT ON pagos 
+        CREATE TRIGGER before_insert_pagos
+        BEFORE INSERT ON pagos 
         FOR EACH ROW
-        EXECUTE FUNCTION update_estado();
+        EXECUTE FUNCTION verificar_pago();
         
         END IF;
-      END $$;   
-    
+      END $$;    
+      
 `
     );
   } catch (error) {

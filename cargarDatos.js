@@ -1,4 +1,4 @@
-const { Cliente, Deuda } = require("./models");
+const { Cliente, Deuda, Pago } = require("./models");
 
 // Función para generar un número de CI aleatorio
 // function generarCINuevo() {
@@ -47,6 +47,9 @@ async function poblarTablaDeuda(n) {
 
 async function destroyTables() {
   try {
+    await Pago.destroy({
+      where: {},
+    });
     await Cliente.destroy({
       where: {}, // No se especifican condiciones, por lo que elimina todos los registros
     });
@@ -54,15 +57,15 @@ async function destroyTables() {
       where: {},
     });
   } catch (error) {
-    console.error("Error al poblar la tabla Deuda:", error.message);
+    console.error("Error al poblar la tabla:", error.message);
   }
 }
 
 (async () => {
   try {
     await destroyTables();
-    await poblarTablaCliente(50);
-    await poblarTablaDeuda(150);
+    await poblarTablaCliente(80);
+    await poblarTablaDeuda(500);
   } catch (error) {
     console.log(error.message);
   }

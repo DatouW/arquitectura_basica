@@ -10,8 +10,8 @@ const sequelize = new Sequelize(
     dialect: "postgres",
     pool: {
       max: 20, // Tamaño máximo del pool de conexiones
-      acquire: 30000, // Tiempo máximo para adquirir una conexión
-      idle: 10000, // Tiempo máximo de inactividad de una conexión antes de ser liberada
+      // acquire: 30000, // Tiempo máximo para adquirir una conexión
+      // idle: 10000, // Tiempo máximo de inactividad de una conexión antes de ser liberada
     },
   }
 );
